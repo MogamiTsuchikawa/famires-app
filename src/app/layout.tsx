@@ -5,7 +5,7 @@ import { Header } from "@/components/Header";
 import { AdminMenu } from "@/components/AdminMenu";
 
 const inter = Inter({ subsets: ["latin"] });
-
+export const runtime = 'edge';
 export const metadata: Metadata = {
   title: "Famires App",
   description: "Family Restaurant App",
