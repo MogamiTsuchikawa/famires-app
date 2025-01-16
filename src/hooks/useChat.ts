@@ -4,8 +4,6 @@ import { useState, useCallback, useEffect } from "react";
 import { Message, ChatResponse } from "@/types/chat";
 import { v4 as uuidv4 } from "uuid";
 
-const DOMAIN = "https://miuye.shibaura-it.ac";
-
 export function useChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [chatId, setChatId] = useState<string | null>(null);
@@ -14,7 +12,7 @@ export function useChat() {
   // チャットセッションの開始
   const startChat = useCallback(async () => {
     try {
-      const response = await fetch(`${DOMAIN}/start_chat`, {
+      const response = await fetch("/api/chat/start_chat", {
         method: "POST",
       });
       const data = await response.json();
@@ -41,7 +39,7 @@ export function useChat() {
       setIsLoading(true);
 
       try {
-        const response = await fetch(`${DOMAIN}/chat/${chatId}`, {
+        const response = await fetch(`/api/chat/chat/${chatId}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
