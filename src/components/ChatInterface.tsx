@@ -9,17 +9,25 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Mic, Send } from "lucide-react";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { useChat } from "@/hooks/useChat";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
+import { Item } from "@/types/item";
+import { ItemCard } from "@/components/ItemCard";
+import { items } from "@/data/item";
 
-export function ChatInterface() {
+export function ChatInterface({
+  setSelectedItem,
+}: {
+  setSelectedItem: (item: Item) => void;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
   const { messages, sendMessage, isLoading } = useChat();
   const { isListening, startListening, stopListening, isSupported } =
     useSpeechRecognition();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const handleSend = useCallback(async () => {
     if (inputMessage.trim() && !isLoading) {
@@ -48,6 +56,27 @@ export function ChatInterface() {
     }
   }, [isListening, startListening, stopListening]);
 
+  const extractItemIds = (text: string): string[] => {
+    const matches = text.match(/\[(.*?)\]/g);
+    return matches ? matches.map((match) => match.slice(1, -1)) : [];
+  };
+
+  const findItemsByIds = (ids: string[]): Item[] => {
+    return items.filter((item) => ids.includes(item.id));
+  };
+
+  const removeItemTags = (text: string): string => {
+    return text.replace(/\[(.*?)\]/g, "").trim();
+  };
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isLoading]);
+
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
@@ -66,21 +95,41 @@ export function ChatInterface() {
 
         <div className="flex-1 overflow-y-auto py-4">
           {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex ${
-                message.isUser ? "justify-end" : "justify-start"
-              } mb-4`}
-            >
+            <div key={message.id}>
               <div
-                className={`max-w-[80%] rounded-lg px-4 py-2 ${
-                  message.isUser
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-100 text-gray-900"
-                }`}
+                className={`flex ${
+                  message.isUser ? "justify-end" : "justify-start"
+                } mb-4`}
               >
-                {message.content}
+                <div
+                  className={`max-w-[80%] rounded-lg px-4 py-2 ${
+                    message.isUser
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-100 text-gray-900"
+                  }`}
+                >
+                  {message.isUser
+                    ? message.content
+                    : removeItemTags(message.content)}
+                </div>
               </div>
+              {!message.isUser && (
+                <div className="grid grid-cols-2 gap-2 mb-4">
+                  {findItemsByIds(extractItemIds(message.content)).map(
+                    (item) => (
+                      <div key={item.id} className="scale-90 origin-left">
+                        <ItemCard
+                          item={item}
+                          onClick={(item) => {
+                            setSelectedItem(item);
+                            setIsOpen(false);
+                          }}
+                        />
+                      </div>
+                    )
+                  )}
+                </div>
+              )}
             </div>
           ))}
           {isLoading && (
@@ -90,6 +139,7 @@ export function ChatInterface() {
               </div>
             </div>
           )}
+          <div ref={messagesEndRef} />
         </div>
 
         <div className="border-t pt-4">

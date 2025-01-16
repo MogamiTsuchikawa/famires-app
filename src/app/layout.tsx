@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
-import { ChatInterface } from "@/components/ChatInterface";
 
 const inter = Inter({ subsets: ["latin"] });
 export const runtime = "edge";
@@ -22,9 +21,6 @@ export default function RootLayout({
         <div className="min-h-screen flex flex-col">
           <Header />
           <main className="flex-1">{children}</main>
-          <div className="fixed bottom-4 left-4 z-50">
-            <ChatInterface />
-          </div>
         </div>
       </body>
     </html>
