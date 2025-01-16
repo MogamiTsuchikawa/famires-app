@@ -53,7 +53,7 @@ export function useChat() {
         if (!reader) throw new Error("No reader available");
 
         let currentResponse = "";
-        let assistantMessageId = uuidv4();
+        const assistantMessageId = uuidv4();
 
         // SSEからの応答を処理
         while (true) {

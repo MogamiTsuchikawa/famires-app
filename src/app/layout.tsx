@@ -2,9 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
-import { AdminMenu } from "@/components/AdminMenu";
 import { ChatInterface } from "@/components/ChatInterface";
-import { Cart } from "@/components/Cart";
 
 const inter = Inter({ subsets: ["latin"] });
 export const runtime = "edge";

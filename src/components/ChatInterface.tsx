@@ -21,13 +21,13 @@ export function ChatInterface() {
   const { isListening, startListening, stopListening, isSupported } =
     useSpeechRecognition();
 
-  const handleSend = async () => {
+  const handleSend = useCallback(async () => {
     if (inputMessage.trim() && !isLoading) {
       const message = inputMessage;
       setInputMessage("");
       await sendMessage(message);
     }
-  };
+  }, [inputMessage, isLoading, sendMessage]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
