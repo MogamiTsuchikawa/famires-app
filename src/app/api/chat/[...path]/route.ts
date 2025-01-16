@@ -27,6 +27,7 @@ export async function POST(
       },
     });
   } catch (error) {
+    console.error(error);
     return new Response(JSON.stringify({ error: "Failed to proxy request" }), {
       status: 500,
       headers: {
