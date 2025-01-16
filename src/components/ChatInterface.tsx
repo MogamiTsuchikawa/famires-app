@@ -8,7 +8,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Mic, Send, Loader2 } from "lucide-react";
+import { MessageCircle, Mic, Send } from "lucide-react";
 import { useState, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { useChat } from "@/hooks/useChat";
@@ -97,15 +97,15 @@ export function ChatInterface() {
             <Button
               variant="outline"
               size="icon"
-              className="shrink-0"
+              className={`shrink-0 ${
+                isListening
+                  ? "bg-red-500 hover:bg-red-600 text-white border-red-500"
+                  : ""
+              }`}
               onClick={handleMicClick}
               disabled={!isSupported || isLoading}
             >
-              {isListening ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Mic className={`h-4 w-4 ${isSupported ? "" : "opacity-50"}`} />
-              )}
+              <Mic className={`h-4 w-4 ${isSupported ? "" : "opacity-50"}`} />
             </Button>
             <Input
               value={inputMessage}
