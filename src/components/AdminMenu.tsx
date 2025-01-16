@@ -20,7 +20,7 @@ export function AdminMenu() {
 
   const handleReset = () => {
     // カートを空にする
-    cartStore.items.forEach(item => cartStore.removeItem(item.id));
+    cartStore.items.forEach((item) => cartStore.removeItem(item.id));
     // 注文履歴を空にする
     orderStore.resetOrders?.();
     // メニューを閉じる
@@ -30,11 +30,7 @@ export function AdminMenu() {
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="fixed bottom-8 left-8 z-50"
-        >
+        <Button variant="outline" size="icon" className="">
           <Settings className="h-4 w-4" />
         </Button>
       </SheetTrigger>
@@ -60,4 +56,4 @@ export function AdminMenu() {
       </SheetContent>
     </Sheet>
   );
-} 
+}
